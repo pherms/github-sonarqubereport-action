@@ -3,8 +3,8 @@ FROM alpine:latest
 LABEL "com.github.actions.name"="SonarQube project data importer"
 LABEL "com.github.actions.description"="Import report data from Sonarqube and use it in Github"
 
-RUN apt-get update && apt-get install -y curl nodejs@12
-RUN rm -rf /var/lib/apt/lists/*
+RUN apk update && apk add curl nodejs
+RUN rm -rf /var/cache/apk/*
 
 RUN npm config set unsafe-perm true && \
   npm install --silent --save-dev -g typescript@3.5.2 && \
