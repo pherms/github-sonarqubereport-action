@@ -4,6 +4,12 @@ branding:
   icon: 'code'
   color: 'orange'
 inputs:
+  projectkey:
+    description: 'SonarQube project key'
+    required: true
+  sonarqubetoken:
+    description: 'Sonarqube token'
+    required: true
   columns:
     description: 'how many columns'
     required: false

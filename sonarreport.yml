@@ -1,0 +1,28 @@
+jobs:
+  fetch-api-data:
+    steps:
+      - name: Send request to api
+        run: curl --location --request GET "https://sqplayground.xablu.com/api/measures/component?component=${PROJECTKEY}&metricKeys=violations,bugs,code_smells,reliability_rating,security_rating,security_review_rating,sqale_rating,vulnerabilities,security_hotspots" --header "Authorization: Basic ${SONARQUBETOKEN}" > result.json
+        shell: bash
+        env:
+          PROJECTKEY: MyProjectKey
+          SONARQUBETOKEN: ${{secrets.SONARQUBETOKEN}}
+      - name: Upload output file
+        uses: actions/upload-artifact@v2
+        with:
+          name: result
+          path: .github/result.json
+  process-api-data:
+    table:
+      runs-on: ubuntu-latest
+      name: Update README van data
+      steps:
+      - uses: actions/checkout@v2
+      - name: Read/Write data into README
+        uses: eddiejaoude/github-actions-reader-writer@v0.1
+        with:
+          json-file-path: '.github/result.json'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          columns: 1
+          object-field-names: '[ "metric", "value" ]'
+          html-cell: '<td align="center"><p>{{ metric }}"</p></td><td><p>{{ value }}</p></td>'
